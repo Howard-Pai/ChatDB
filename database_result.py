@@ -6,7 +6,7 @@ import pymongo
 import json
 import getpass
 
-def mysql_runner(sql_query: str) -> str:
+def mysql_runner(sql_command: str) -> str:
     # Connect to the database
     # Enter your database password here
     my_sql_password = input("Enter your MySQL password: ")
@@ -16,54 +16,104 @@ def mysql_runner(sql_query: str) -> str:
     try:
         with engine.connect() as conn:
             # Check if query starts with SELECT 
-            if sql_query.strip().lower().startswith("select"):
-                df = pd.read_sql(sql_query, conn)
-                print(df)
-                return df.to_string(index=False)
-            else:
-                # Execute non-SELECT query inside a transaction
-                with conn.begin():
-                    conn.execute(text(sql_query))
-                return "Query executed successfully."
+            if isinstance(sql_command, dict):
+                operation = sql_command.get("operation")
+
+                if operation == "list_tables":
+                    df = pd.read_sql("SHOW TABLES;", conn)
+                    return df.to_string(index=False)
+
+                elif operation == "describe_table":
+                    table = sql_command.get("table")
+                    if not table:
+                        return "Missing 'table' key in command."
+                    df = pd.read_sql(f"DESCRIBE {table};", conn)
+                    return df.to_string(index=False)
+
+                elif operation == "sample_data":
+                    table = sql_command.get("table")
+                    limit = sql_command.get("limit", 5)
+                    df = pd.read_sql(f"SELECT * FROM {table} LIMIT {limit};", conn)
+                    return df.to_string(index=False)
+
+                else:
+                    return f"Unsupported structured operation: {operation}"
+
+            # Fallback: treat as raw SQL string
+            elif isinstance(sql_command, str):
+                if sql_command.strip().lower().startswith("select"):
+                    df = pd.read_sql(sql_command, conn)
+                    return df.to_string(index=False)
+                else:
+                    with conn.begin():
+                        conn.execute(text(sql_command))
+                    return "Query executed successfully."
+
     except Exception as e:
         return f"Error executing query: {e}"
     
 def mongo_runner(mongo_command: str) -> str:
-    # Prompt securely for MongoDB password (if needed)
-    # For local development, this may be optional or use default credentials
-    mongo_password = getpass.getpass("Enter your MongoDB password (leave blank if not required): ")
+    mongo_password = getpass.getpass("Enter your MongoDB password: ")
     connection = f"mongodb://localhost:27017"
 
     try:
+        # Connect to MongoDB
         client = pymongo.MongoClient(connection)
         db = client.chatDB
 
-        ###########################################################
-        collection = db.chatCollection  # Change to your target collection
-
-        # Expecting mongo_command to be a JSON-formatted string with operation details
         command = json.loads(mongo_command)
-        ###########################################################
-        
         operation = command.get("operation")
-        query = command.get("query", {})
-        data = command.get("data", {})
-        update = command.get("update", {})
+
+        # Handle schemas & data exploration operations:
+        if operation == "list_collections":
+            collections = db.list_collection_names()
+            return json.dumps(collections, indent=2)
+
+        elif operation == "sample_data":
+            collection_name = command.get("collection")
+            limit = command.get("limit", 5)
+            if not collection_name:
+                return "Error: 'collection' is required for sample_data operation."
+            collection = db[collection_name]
+            cursor = collection.find().limit(limit)
+            return json.dumps(list(cursor), indent=2, default=str)
+        
+        # Handle CRUD operations:
+        collection_name = command.get("collection")
+        collection = db[collection_name]
 
         if operation == "find":
-            cursor = collection.find(query)
-            result = list(cursor)
+            query = command.get("query", {})
+            projection = command.get("projection")
+            cursor = collection.find(query, projection) if projection else collection.find(query)
+            return json.dumps(list(cursor), indent=2, default=str)
+
+        elif operation == "aggregate":
+            pipeline = command.get("pipeline", [])
+            if not isinstance(pipeline, list):
+                return "Error: 'pipeline' must be a list of aggregation stages."
+            result = list(collection.aggregate(pipeline))
             return json.dumps(result, indent=2, default=str)
 
         elif operation == "insert":
-            res = collection.insert_one(data)
-            return f"Inserted document with _id: {res.inserted_id}"
+            data = command.get("data")
+            if isinstance(data, list):
+                res = collection.insert_many(data)
+                return f"Inserted {len(res.inserted_ids)} documents."
+            elif isinstance(data, dict):
+                res = collection.insert_one(data)
+                return f"Inserted document with _id: {res.inserted_id}"
+            else:
+                return "Error: 'data' must be a dict or list of dicts."
 
         elif operation == "update":
+            query = command.get("query", {})
+            update = command.get("update", {})
             res = collection.update_one(query, {"$set": update})
             return f"Matched: {res.matched_count}, Modified: {res.modified_count}"
 
         elif operation == "delete":
+            query = command.get("query", {})
             res = collection.delete_one(query)
             return f"Deleted: {res.deleted_count}"
 
