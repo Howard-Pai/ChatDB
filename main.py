@@ -12,14 +12,21 @@ if __name__ == "__main__":
     print(f"Command: {command}")
 
     #call the function to convert NL command to SQL
-    sql_query = convert_nl_to_sql(command)
+    db_type, command = convert_nl_to_sql(command)
 
-    if sql_query:
-        print("Generated SQL Query:")
-        print(sql_query)
+    if command:
+        print("Command after conversion:")
+        print(command)
     else:
-        print("Could not generate SQL query.")
+        print("Could not generate command.")
         sys.exit(1)
 
-    # Send the SQL query to the database
-    mysql_result = database_result(sql_query)
+    if db_type == "SQL":
+        # Send the SQL query to the database
+        mysql_result = database_result.mysql_runner(command)
+    elif db_type == "NoSQL":
+        # Send the NoSQL query to the database
+        mysql_result = database_result.mongo_runner(command)
+    else:
+        print("Unsupported database type.")
+        sys.exit(1)
