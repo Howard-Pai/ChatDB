@@ -11,7 +11,18 @@ if __name__ == "__main__":
     command = sys.argv[1]
     print(f"Command: {command}")
 
-    #call the function to convert NL command to SQL
+    # Call the function to convert NL command to SQL
+    # If the return command is supposed to be a SQL query, it should be in the format of a string
+    # If the return command is supposed to be a NoSQL query, it should be a JSON-formatted string with operation details
+    # The JSON string should be in the format:
+    # {
+    #     "collection": "collection_name",
+    #     "operation": "find",
+    #     "query": {"field": "value"},
+    #     "data": {"field": "value"},
+    #     "update": {"field": "new_value"}
+    # }
+    
     db_type, command = convert_nl_to_sql(command)
 
     if command:
