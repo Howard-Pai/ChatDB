@@ -10,6 +10,7 @@ def mysql_runner(sql_query: str) -> str:
     my_sql_password = input("Enter your MySQL password: ")
     connection = f"mysql+pymysql://root:{my_sql_password}@localhost/chatDB"
     engine = create_engine(connection)
+
     try:
         with engine.connect() as conn:
             # Check if query starts with SELECT (case-insensitive)
@@ -24,4 +25,6 @@ def mysql_runner(sql_query: str) -> str:
                 return "Query executed successfully."
     except Exception as e:
         return f"Error executing query: {e}"
+    
     print(output)
+    return output
