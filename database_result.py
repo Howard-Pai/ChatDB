@@ -13,7 +13,7 @@ def mysql_runner(sql_query: str) -> str:
 
     try:
         with engine.connect() as conn:
-            # Check if query starts with SELECT (case-insensitive)
+            # Check if query starts with SELECT 
             if sql_query.strip().lower().startswith("select"):
                 df = pd.read_sql(sql_query, conn)
                 print(df)
@@ -25,6 +25,3 @@ def mysql_runner(sql_query: str) -> str:
                 return "Query executed successfully."
     except Exception as e:
         return f"Error executing query: {e}"
-    
-    print(output)
-    return output
