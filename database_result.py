@@ -8,46 +8,40 @@ import getpass
 
 def mysql_runner(sql_command: str) -> str:
     # Connect to the database
-    # Enter your database password here
     my_sql_password = input("Enter your MySQL password: ")
     connection = f"mysql+pymysql://root:{my_sql_password}@localhost/chatDB"
     engine = create_engine(connection)
 
+    sql_command = json.loads(sql_command)
     try:
         with engine.connect() as conn:
             # Check if query starts with SELECT 
-            if isinstance(sql_command, dict):
-                operation = sql_command.get("operation")
+            operation = sql_command.get("operation")
 
-                if operation == "list_tables":
-                    df = pd.read_sql("SHOW TABLES;", conn)
-                    return df.to_string(index=False)
+            if operation == "list_tables":
+                df = pd.read_sql("SHOW TABLES;", conn)
+                return df.to_string(index=False)
 
-                elif operation == "describe_table":
-                    table = sql_command.get("table")
-                    if not table:
-                        return "Missing 'table' key in command."
-                    df = pd.read_sql(f"DESCRIBE {table};", conn)
-                    return df.to_string(index=False)
+            elif operation == "describe_table":
+                table = sql_command.get("table")
+                if not table:
+                    return "Missing 'table' key in command."
+                df = pd.read_sql(f"DESCRIBE {table};", conn)
+                return df.to_string(index=False)
 
-                elif operation == "sample_data":
-                    table = sql_command.get("table")
-                    limit = sql_command.get("limit", 5)
-                    df = pd.read_sql(f"SELECT * FROM {table} LIMIT {limit};", conn)
-                    return df.to_string(index=False)
+            elif operation == "sample_data":
+                table = sql_command.get("table")
+                limit = sql_command.get("limit", 5)
+                df = pd.read_sql(f"SELECT * FROM {table} LIMIT {limit};", conn)
+                return df.to_string(index=False)
 
-                else:
-                    return f"Unsupported structured operation: {operation}"
-
-            # Fallback: treat as raw SQL string
-            elif isinstance(sql_command, str):
-                if sql_command.strip().lower().startswith("select"):
-                    df = pd.read_sql(sql_command, conn)
-                    return df.to_string(index=False)
-                else:
-                    with conn.begin():
-                        conn.execute(text(sql_command))
-                    return "Query executed successfully."
+            elif operation == "select":
+                df = pd.read_sql(sql_command, conn)
+                return df.to_string(index=False)
+            else:
+                with conn.begin():
+                    conn.execute(text(sql_command))
+                return "Query executed successfully."
 
     except Exception as e:
         return f"Error executing query: {e}"
