@@ -6,10 +6,10 @@ import pymongo
 import json
 import getpass
 
-def mysql_runner(database_name:str, sql_command: str) -> str:
+def mysql_runner(sql_command: str) -> str:
     # Connect to the database
     my_sql_password = input("Enter your MySQL password: ")
-    connection = f"mysql+pymysql://root:{my_sql_password}@localhost/{database_name}"
+    connection = f"mysql+pymysql://root:{my_sql_password}@localhost/chatDB"
     engine = create_engine(connection)
 
     sql_command = json.loads(sql_command)
@@ -46,14 +46,14 @@ def mysql_runner(database_name:str, sql_command: str) -> str:
     except Exception as e:
         return f"Error executing query: {e}"
     
-def mongo_runner(database_name: str, mongo_command: str) -> str:
+def mongo_runner(mongo_command: str) -> str:
     mongo_password = getpass.getpass("Enter your MongoDB password: ")
     connection = f"mongodb://localhost:27017"
 
     try:
         # Connect to MongoDB
         client = pymongo.MongoClient(connection)
-        db = client.get_database(database_name)  # Replace with your database name
+        db = client.get_database("chatDB")
 
         command = json.loads(mongo_command)
         operation = command.get("operation")
