@@ -12,7 +12,7 @@ if __name__ == "__main__":
     print(f"Command: {NL_query}")
 
     # Call the function to convert NL query to SQL
-    db_type, database_name, command = convert_nl_to_sql.convert(NL_query)
+    db_type, command = convert_nl_to_sql.convert(NL_query)
 
     if command:
         print("Command after conversion:")
@@ -23,10 +23,10 @@ if __name__ == "__main__":
 
     if db_type == "SQL":
         # Send the SQL query to the database
-        mysql_result = database_result.mysql_runner(database_name, command)
+        mysql_result = database_result.mysql_runner(command)
     elif db_type == "NoSQL":
         # Send the NoSQL query to the database
-        mysql_result = database_result.mongo_runner(database_name, command)
+        mysql_result = database_result.mongo_runner(command)
     else:
         print("Unsupported database type.")
         sys.exit(1)
