@@ -9,7 +9,8 @@ import getpass
 def mysql_runner(sql_command: str) -> str:
     # Connect to the database
     my_sql_password = input("Enter your MySQL password: ")
-    connection = f"mysql+pymysql://root:{my_sql_password}@localhost/chatDB"
+    remote_access_mysql_password = "DSCI551"
+    connection = f"mysql+pymysql://root:{remote_access_mysql_password}@ec2-18-216-195-48.us-east-2.compute.amazonaws.com/chatDB"
     engine = create_engine(connection)
 
     sql_command = json.loads(sql_command)
@@ -47,8 +48,7 @@ def mysql_runner(sql_command: str) -> str:
         return f"Error executing query: {e}"
     
 def mongo_runner(mongo_command: str) -> str:
-    mongo_password = getpass.getpass("Enter your MongoDB password: ")
-    connection = f"mongodb://localhost:27017"
+    connection = f"mongodb://ec2-18-216-195-48.us-east-2.compute.amazonaws.com:27017/"
 
     try:
         # Connect to MongoDB
