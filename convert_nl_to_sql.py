@@ -121,6 +121,7 @@ if __name__ == "__main__":
     example = '请给我一个包含用户信息的表格，表格中包含用户的姓名、年龄和电子邮件地址。'
     db_type, db_name, command = convert(example)
     print("DB 类型：", db_type)
+
+
     print("数据库：", db_name)
     print("命令 JSON：", json.dumps(command, ensure_ascii=False, indent=2))
-
