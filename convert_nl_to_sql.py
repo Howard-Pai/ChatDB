@@ -64,53 +64,50 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
         )
         return response.choices[0].message.content.strip()
 
-    def convert_(NL_query: str) -> Tuple[str, str, Union[dict, str]]:
+    def convert_(NL_query: str) -> Tuple[str, str]:
         """
-        将自然语言查询转换为 SQL 或 NoSQL 命令。
+        Transform a natural language query into a SQL or NoSQL command.
 
         Args:
-            NL_query (str): 自然语言查询
+            NL_query (str): The natural language query.
 
         Returns:
-            Tuple[str, str, dict]: (db_type, database_name, command_dict)
-                                  db_type: "SQL" 或 "NoSQL"
-                                  database_name: 例如 "PostgreSQL", "MongoDB" 等
-                                  command_dict: 对应的 JSON 格式命令
+            Tuple[str, str]: (db_type, command)
+                                  db_type: "SQL" or "NoSQL"
+                                  command: JSON format string command
         """
         prompt = f"""
-    请将以下自然语言查询转换成三元组 (db_type, database_name, command)：
-    - db_type: "SQL" 或 "NoSQL"
-    - database_name: 使用的数据库名称（例如 "PostgreSQL", "MySQL", "MongoDB"）
-    - command: JSON 格式的命令，符合下面规范：
-      SQL:
-        {{ "operation": "list_tables" }}
-        {{ "operation": "describe_table", "table": "table_name" }}
-        {{ "operation": "sample_data", "table": "table_name", "limit": 5 }}
-        {{ "operation": "select", "query": "SELECT * FROM table_name WHERE ..." }}
+        please change the natural language query to a tuple consists of (db_type, command)：
+        - db_type: "SQL" or "NoSQL"
+        - command: JSON format command, which should be like:
+        SQL:
+            {{ "operation": "list_tables" }}
+            {{ "operation": "describe_table", "table": "table_name" }}
+            {{ "operation": "sample_data", "table": "table_name", "limit": 5 }}
+            {{ "operation": "select", "query": "SELECT * FROM table_name WHERE ..." }}
         ...
-      NoSQL:
-        {{ "operation": "list_collections" }}
-        {{ "operation": "sample_data", "collection": "name", "limit": 5 }}
-        {{ "operation": "find", "query": {{ "field": "value" }} }}
-        {{ "operation": "aggregate", "pipeline": [{{"$match": {{...}}}}] }}
+        NoSQL:
+            {{ "operation": "list_collections" }}
+            {{ "operation": "sample_data", "collection": "name", "limit": 5 }}
+            {{ "operation": "find", "query": {{ "field": "value" }} }}
+            {{ "operation": "aggregate", "pipeline": [{{"$match": {{...}}}}] }}
         ...
-    仅返回 Python 风格的三元组，例如：
-    ("SQL", "PostgreSQL", {{ "operation": "select", "query": "SELECT * FROM users" }})
-    不要做额外解释。
-    ---
-    自然语言查询：
-    \"\"\"{NL_query}\"\"\"
-    """
+        Please only return the tuple without any extra explanation. For example:
+        ("SQL", {{ "operation": "select", "query": "SELECT * FROM users" }})
+        ---
+        Natural language query：
+        \"\"\"{NL_query}\"\"\"
+        """
         raw = call_openai(prompt)
         try:
             # eval 安全性取决于模型输出，如果环境可控，可考虑用 ast.literal_eval
-            db_type, db_name, cmd = eval(raw)
-            if isinstance(cmd, str):
-                # 如果模型误输出了字符串，则尝试 JSON 解析
-                cmd = json.loads(cmd)
-            return db_type, db_name, cmd
+            db_type, cmd = eval(raw)
+            if not isinstance(cmd, str):
+                # raise ValueError("Command should be a string.")
+                raise ValueError("Command should be a JSON format string.")
+            return db_type, cmd
         except Exception as e:
-            raise ValueError(f"解析模型输出失败: {e}\n输出原文：{raw}")
+            raise ValueError(f"Error occurs: {e}\noriginal output：{raw}")
 
     #
     db_type, db_name, command = convert_(NL_query)
@@ -118,10 +115,8 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
 
 
 if __name__ == "__main__":
-    example = '请给我一个包含用户信息的表格，表格中包含用户的姓名、年龄和电子邮件地址。'
-    db_type, db_name, command = convert(example)
-    print("DB 类型：", db_type)
+    example = 'please show me the table structure of the "users" table'
+    db_type, command = convert(example)
+    print("DB type：", db_type)
+    print("SQL or NoSQL command：", command)
 
-
-    print("数据库：", db_name)
-    print("命令 JSON：", json.dumps(command, ensure_ascii=False, indent=2))
