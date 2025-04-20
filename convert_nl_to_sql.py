@@ -102,16 +102,20 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
         try:
             # eval 安全性取决于模型输出，如果环境可控，可考虑用 ast.literal_eval
             db_type, cmd = eval(raw)
+
             if not isinstance(cmd, str):
                 # raise ValueError("Command should be a string.")
-                raise ValueError("Command should be a JSON format string.")
+                if not isinstance(cmd, dict):
+                    raise ValueError("Command should be a JSON format string.")
+            
+            cmd = json.dumps(cmd, ensure_ascii=False)
             return db_type, cmd
         except Exception as e:
             raise ValueError(f"Error occurs: {e}\noriginal output：{raw}")
 
     #
-    db_type, db_name, command = convert_(NL_query)
-    return db_type, db_name, command
+    db_type, command = convert_(NL_query)
+    return db_type, command
 
 
 if __name__ == "__main__":

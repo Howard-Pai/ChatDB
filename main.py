@@ -24,9 +24,11 @@ if __name__ == "__main__":
     if db_type == "SQL":
         # Send the SQL query to the database
         mysql_result = database_result.mysql_runner(command)
+        print(mysql_result)
     elif db_type == "NoSQL":
         # Send the NoSQL query to the database
-        mysql_result = database_result.mongo_runner(command)
+        Nosql_result = database_result.mongo_runner(command)
+        print(Nosql_result)
     else:
         print("Unsupported database type.")
         sys.exit(1)
