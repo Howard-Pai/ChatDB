@@ -6,10 +6,13 @@ import pymongo
 import json
 import getpass
 
+IPV4_DNS = "ec2-18-118-138-163.us-east-2.compute.amazonaws.com"
+MYSQL_PASSWORD = "DSCI551"
+MONGODB_PASSWORD = "ec2-18-118-138-163.us-east-2.compute.amazonaws.com"
+DATABASE_NAME = "chatDB"
 def mysql_runner(sql_command: str) -> str:
     # Connect to the database
-    my_sql_password = input("Enter your MySQL password: ")
-    connection = f"mysql+pymysql://root:{my_sql_password}@localhost/chatDB"
+    connection = f"mysql+pymysql://root:{MYSQL_PASSWORD}@{IPV4_DNS}/{DATABASE_NAME}"
     engine = create_engine(connection)
 
     sql_command = json.loads(sql_command)
@@ -47,13 +50,11 @@ def mysql_runner(sql_command: str) -> str:
         return f"Error executing query: {e}"
     
 def mongo_runner(mongo_command: str) -> str:
-    mongo_password = getpass.getpass("Enter your MongoDB password: ")
-    connection = f"mongodb://localhost:27017"
 
     try:
         # Connect to MongoDB
-        client = pymongo.MongoClient(connection)
-        db = client.get_database("chatDB")
+        client = pymongo.MongoClient(f"mongodb://{IPV4_DNS}:27017/")
+        db = client.get_database(DATABASE_NAME)
 
         command = json.loads(mongo_command)
         operation = command.get("operation")
