@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine,text
+from sqlalchemy import create_engine, text
 import pymysql
 import pandas as pd
 import sys
@@ -10,6 +10,8 @@ IPV4_DNS = "ec2-18-118-138-163.us-east-2.compute.amazonaws.com"
 MYSQL_PASSWORD = "DSCI551"
 MONGODB_PASSWORD = "ec2-18-118-138-163.us-east-2.compute.amazonaws.com"
 DATABASE_NAME = "chatDB"
+
+
 def mysql_runner(sql_command: str) -> str:
     # Connect to the database
     connection = f"mysql+pymysql://root:{MYSQL_PASSWORD}@{IPV4_DNS}/{DATABASE_NAME}"
@@ -48,9 +50,9 @@ def mysql_runner(sql_command: str) -> str:
 
     except Exception as e:
         return f"Error executing query: {e}"
-    
-def mongo_runner(mongo_command: str) -> str:
 
+
+def mongo_runner(mongo_command: str) -> str:
     try:
         # Connect to MongoDB
         client = pymongo.MongoClient(f"mongodb://{IPV4_DNS}:27017/")
@@ -72,7 +74,7 @@ def mongo_runner(mongo_command: str) -> str:
             collection = db[collection_name]
             cursor = collection.find().limit(limit)
             return json.dumps(list(cursor), indent=2, default=str)
-        
+
         # Handle CRUD operations:
         collection_name = command.get("collection")
         collection = db[collection_name]
