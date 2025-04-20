@@ -107,13 +107,8 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
                 # raise ValueError("Command should be a string.")
                 if not isinstance(cmd, dict):
                     raise ValueError("Command should be a JSON format string.")
-<<<<<<< HEAD
             
             cmd = json.dumps(cmd, ensure_ascii=False)
-=======
-                # Convert dict to JSON string
-                cmd = json.dumps(cmd, ensure_ascii=False)
->>>>>>> origin/HEAD
             return db_type, cmd
         except Exception as e:
             raise ValueError(f"Error occurs: {e}\noriginal output：{raw}")
