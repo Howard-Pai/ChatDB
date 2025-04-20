@@ -7,7 +7,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Please provide a command in natural language.")
         sys.exit(1)
-    
+
     NL_query = sys.argv[1]
     print(f"Command: {NL_query}")
 

@@ -104,14 +104,17 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
             db_type, cmd = eval(raw)
             if not isinstance(cmd, str):
                 # raise ValueError("Command should be a string.")
-                raise ValueError("Command should be a JSON format string.")
+                if not isinstance(cmd, dict):
+                    raise ValueError("Command should be a JSON format string.")
+                # Convert dict to JSON string
+                cmd = json.dumps(cmd, ensure_ascii=False)
             return db_type, cmd
         except Exception as e:
             raise ValueError(f"Error occurs: {e}\noriginal output：{raw}")
 
     #
-    db_type, db_name, command = convert_(NL_query)
-    return db_type, db_name, command
+    db_type, command = convert_(NL_query)
+    return db_type, command
 
 
 if __name__ == "__main__":
@@ -119,4 +122,3 @@ if __name__ == "__main__":
     db_type, command = convert(example)
     print("DB type：", db_type)
     print("SQL or NoSQL command：", command)
-
