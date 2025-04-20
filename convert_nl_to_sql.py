@@ -46,10 +46,17 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
     # Initialize OpenAI client
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+    def read_json_file(file_path: str) -> dict:
+        """
+        Reads a JSON file and returns its content as a dictionary.
+        """
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return json.load(file)
+
 
     def call_openai(prompt,
                     model="gpt-4o-mini",
-                    temperature=0.2) -> str:
+                    temperature=0.1) -> str:
         """
         Calls the OpenAI chat completion API using v1 client and returns the assistant's reply.
         """
@@ -57,7 +64,31 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
         response = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system",
+                 "content": f""""please change the natural language query to a tuple consists of (db_type, command)：
+                    - db_type: "SQL" or "NoSQL"
+                    - command: JSON format command, which should be like:
+                SQL:
+                    {{ "operation": "list_tables" }}
+                    {{ "operation": "describe_table", "table": "table_name" }}
+                    {{ "operation": "sample_data", "table": "table_name", "limit": 5 }}
+                    {{ "operation": "select", "query": "SELECT * FROM table_name WHERE ..." }}
+                ...
+                NoSQL:
+                    {{ "operation": "list_collections" }}
+                    {{ "operation": "sample_data", "collection": "name", "limit": 5 }}
+                    {{ "operation": "find", "query": {{ "field": "value" }} }}
+                    {{ "operation": "aggregate", "pipeline": [{{"$match": {{...}}}}] }}
+                ...
+                Please only return the tuple without any extra explanation. For example:
+                ("SQL", {{ "operation": "select", "query": "SELECT * FROM users" }}) 
+                
+                ...
+                
+                {read_json_file('table_col.json')} to get the example of the command.
+                
+                """},
+
                 {"role": "user", "content": prompt}
             ],
             temperature=temperature
@@ -77,23 +108,6 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
                                   command: JSON format string command
         """
         prompt = f"""
-        please change the natural language query to a tuple consists of (db_type, command)：
-        - db_type: "SQL" or "NoSQL"
-        - command: JSON format command, which should be like:
-        SQL:
-            {{ "operation": "list_tables" }}
-            {{ "operation": "describe_table", "table": "table_name" }}
-            {{ "operation": "sample_data", "table": "table_name", "limit": 5 }}
-            {{ "operation": "select", "query": "SELECT * FROM table_name WHERE ..." }}
-        ...
-        NoSQL:
-            {{ "operation": "list_collections" }}
-            {{ "operation": "sample_data", "collection": "name", "limit": 5 }}
-            {{ "operation": "find", "query": {{ "field": "value" }} }}
-            {{ "operation": "aggregate", "pipeline": [{{"$match": {{...}}}}] }}
-        ...
-        Please only return the tuple without any extra explanation. For example:
-        ("SQL", {{ "operation": "select", "query": "SELECT * FROM users" }})
         ---
         Natural language query：
         \"\"\"{NL_query}\"\"\"

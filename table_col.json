@@ -1,0 +1,60 @@
+{
+  "academy": [
+    { "name": "film",       "type": "text" },
+    { "name": "award_type", "type": "text" },
+    { "name": "status",     "type": "text" }
+  ],
+  "box_office": [
+    { "name": "film",                  "type": "text"   },
+    { "name": "budget",                "type": "double" },
+    { "name": "box_office_us_canada",  "type": "bigint" },
+    { "name": "box_office_other",      "type": "bigint" },
+    { "name": "box_office_worldwide",  "type": "bigint" }
+  ],
+  "genres": [
+    { "name": "film",     "type": "text" },
+    { "name": "category", "type": "text" },
+    { "name": "value",    "type": "text" }
+  ],
+  "pixar_films": [
+    { "name": "Store_ID",     "type": "bigint" },
+    { "name": "Product_ID",   "type": "bigint" },
+    { "name": "Stock_On_Hand","type": "bigint" }
+  ],
+  "pixar_people": [
+    { "name": "film",      "type": "text" },
+    { "name": "role_type", "type": "text" },
+    { "name": "name",      "type": "text" }
+  ],
+  "products": [
+    { "name": "Product_ID",       "type": "bigint" },
+    { "name": "Product_Name",     "type": "text"   },
+    { "name": "Product_Category", "type": "text"   },
+    { "name": "Product_Cost",     "type": "text"   },
+    { "name": "Product_Price",    "type": "text"   }
+  ],
+  "public_response": [
+    { "name": "film",                  "type": "text"   },
+    { "name": "rotten_tomatoes_score","type": "bigint" },
+    { "name": "rotten_tomatoes_counts","type":"bigint" },
+    { "name": "metacritic_score",      "type": "bigint" },
+    { "name": "metacritic_counts",     "type": "bigint" },
+    { "name": "cinema_score",          "type": "text"   },
+    { "name": "imdb_score",            "type": "double" },
+    { "name": "imdb_counts",           "type": "bigint" }
+  ],
+  "sales": [
+    { "name": "Sale_ID",   "type": "bigint" },
+    { "name": "Date",      "type": "text"   },
+    { "name": "Store_ID",  "type": "bigint" },
+    { "name": "Product_ID","type": "bigint" },
+    { "name": "Units",     "type": "bigint" }
+  ],
+  "stores": [
+    { "name": "Store_ID",       "type": "bigint" },
+    { "name": "Store_Name",     "type": "text"   },
+    { "name": "Store_City",     "type": "text"   },
+    { "name": "Store_Location", "type": "text"   },
+    { "name": "Store_Open_Date","type": "text"   }
+  ]
+}
