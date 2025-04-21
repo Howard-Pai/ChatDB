@@ -22,7 +22,6 @@ def mysql_runner(sql_command: str) -> str:
         with engine.connect() as conn:
             # Check if query starts with SELECT 
             operation = sql_command.get("operation")
-
             if operation == "list_tables":
                 df = pd.read_sql("SHOW TABLES;", conn)
                 return df.to_string(index=False)
@@ -41,7 +40,8 @@ def mysql_runner(sql_command: str) -> str:
                 return df.to_string(index=False)
 
             elif operation == "select":
-                df = pd.read_sql(sql_command, conn)
+                sql_query = sql_command.get("query")
+                df = pd.read_sql(sql_query, conn)
                 return df.to_string(index=False)
             else:
                 with conn.begin():
@@ -60,6 +60,7 @@ def mongo_runner(mongo_command: str) -> str:
 
         command = json.loads(mongo_command)
         operation = command.get("operation")
+        print(operation)
 
         # Handle schemas & data exploration operations:
         if operation == "list_collections":
@@ -77,6 +78,7 @@ def mongo_runner(mongo_command: str) -> str:
 
         # Handle CRUD operations:
         collection_name = command.get("collection")
+        print("collection_name {}".format(collection_name))
         collection = db[collection_name]
 
         if operation == "find":

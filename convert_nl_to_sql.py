@@ -73,19 +73,30 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
                     {{ "operation": "describe_table", "table": "table_name" }}
                     {{ "operation": "sample_data", "table": "table_name", "limit": 5 }}
                     {{ "operation": "select", "query": "SELECT * FROM table_name WHERE ..." }}
+                    {{ "operation": "insert", "table": "table_name", "data": {{...}} }}
+                    {{ "operation": "update", "table": "table_name", "query": {{...}}, "update": {{...}} }}
+                    {{ "operation": "delete", "table": "table_name", "query": {{...}} }}
                 ...
                 NoSQL:
                     {{ "operation": "list_collections" }}
                     {{ "operation": "sample_data", "collection": "name", "limit": 5 }}
-                    {{ "operation": "find", "query": {{ "field": "value" }} }}
-                    {{ "operation": "aggregate", "pipeline": [{{"$match": {{...}}}}] }}
+                    {{ "operation": "find", "collection": "name", "query": {{ "field": "value" }} }}
+                    {{ "operation": "aggregate","collection": "name", "pipeline": [{{"$match": {{...}}}}] }}
+                    {{ "operation": "insert", "collection": "name", "data": {{...}} }}
+                    {{ "operation": "update", "collection": "name", "query": {{...}}, "update": {{...}} }}
+                    {{ "operation": "delete", "collection": "name", "query": {{...}} }}
                 ...
                 Please only return the tuple without any extra explanation. For example:
                 ("SQL", {{ "operation": "select", "query": "SELECT * FROM users" }}) 
                 
                 ...
+                SQL data structure:
                 
-                {read_json_file('table_col.json')} to get the example of the command.
+                {read_json_file('pixar_dataset_format.json')} to get the data structure of pixar_films dataset.
+                
+                ...
+                NoSQL data structure:
+                {read_json_file('toys_dataset_format.json')} to get the data structure of toys dataset.
                 
                 """},
 

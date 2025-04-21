@@ -42,19 +42,5 @@
     { "name": "cinema_score",          "type": "text"   },
     { "name": "imdb_score",            "type": "double" },
     { "name": "imdb_counts",           "type": "bigint" }
-  ],
-  "sales": [
-    { "name": "Sale_ID",   "type": "bigint" },
-    { "name": "Date",      "type": "text"   },
-    { "name": "Store_ID",  "type": "bigint" },
-    { "name": "Product_ID","type": "bigint" },
-    { "name": "Units",     "type": "bigint" }
-  ],
-  "stores": [
-    { "name": "Store_ID",       "type": "bigint" },
-    { "name": "Store_Name",     "type": "text"   },
-    { "name": "Store_City",     "type": "text"   },
-    { "name": "Store_Location", "type": "text"   },
-    { "name": "Store_Open_Date","type": "text"   }
-  ]
+    ]
 }
