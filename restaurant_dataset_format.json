@@ -1,0 +1,15 @@
+{
+  "order_details": [
+    { "name": "order_details_id", "type": "integer" },
+    { "name": "order_id",         "type": "integer" },
+    { "name": "order_date",       "type": "date"    },
+    { "name": "order_time",       "type": "time"    },
+    { "name": "item_id",          "type": "integer" }
+  ],
+  "menu_items": [
+    { "name": "menu_item_id", "type": "integer" },
+    { "name": "item_name",    "type": "text"    },
+    { "name": "category",     "type": "text"    },
+    { "name": "price",        "type": "decimal" }
+  ]
+}

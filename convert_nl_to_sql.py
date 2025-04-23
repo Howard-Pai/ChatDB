@@ -90,14 +90,11 @@ def convert(NL_query: str) -> Tuple[str, str, str]:
                 ("SQL", {{ "operation": "select", "query": "SELECT * FROM users" }}) 
                 
                 ...
-                SQL data structure:
+                data structure:
                 
                 {read_json_file('pixar_dataset_format.json')} to get the data structure of pixar_films dataset.
-                
-                ...
-                NoSQL data structure:
                 {read_json_file('toys_dataset_format.json')} to get the data structure of toys dataset.
-                
+                {read_json_file('restaurant_dataset_format.json')} to get the data structure of restaurant dataset.
                 """},
 
                 {"role": "user", "content": prompt}
