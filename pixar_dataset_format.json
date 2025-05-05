@@ -17,22 +17,20 @@
     { "name": "value",    "type": "text" }
   ],
   "pixar_films": [
-    { "name": "Store_ID",     "type": "bigint" },
-    { "name": "Product_ID",   "type": "bigint" },
-    { "name": "Stock_On_Hand","type": "bigint" }
+    { "name": "number",     "type": "bigint" },
+    { "name": "film",   "type": "text" },
+    { "name": "release_date","type": "text" },
+    { "name": "run_time", "type": "bigint" },
+    { "name": "plot",    "type": "text"   },
+    { "name": "film_rating",  "type": "text"   }
+
   ],
   "pixar_people": [
     { "name": "film",      "type": "text" },
     { "name": "role_type", "type": "text" },
     { "name": "name",      "type": "text" }
   ],
-  "products": [
-    { "name": "Product_ID",       "type": "bigint" },
-    { "name": "Product_Name",     "type": "text"   },
-    { "name": "Product_Category", "type": "text"   },
-    { "name": "Product_Cost",     "type": "text"   },
-    { "name": "Product_Price",    "type": "text"   }
-  ],
+
   "public_response": [
     { "name": "film",                  "type": "text"   },
     { "name": "rotten_tomatoes_score","type": "bigint" },
