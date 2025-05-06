@@ -6,7 +6,7 @@ import pymongo
 import json
 import getpass
 
-IPV4_DNS = "ec2-3-21-159-170.us-east-2.compute.amazonaws.com"
+IPV4_DNS = "ec2-3-149-5-70.us-east-2.compute.amazonaws.com"
 MYSQL_PASSWORD = "DSCI551"
 DATABASE_NAME = "chatDB"
 
