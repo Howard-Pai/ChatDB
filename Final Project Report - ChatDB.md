@@ -42,15 +42,38 @@ The ultimate goal of this project is to create a flexible and user-friendly syst
 
 ## Architecture Design
 ### Flow Diagram
-(Insert flow diagram here)
+<img title="Flow Diagram" src="Flow Diagram.png">
 
 ### Description
-Provide a description of the system's architecture. Include how the different components interact and the role of each module.
+1. Start: The process begins when a user inputs a query in natural language.
+
+2. Natural Language Processing: The query, along with the relevant data structure, is passed to an LLM (Large Language Model). The LLM interprets the input and generates a corresponding structured query.
+
+3. Query Type Detection:
+
+    - The output from the LLM is analyzed to determine its type.
+
+    - If the generated query is identified as an SQL query, it is directed to a MySQL database.
+
+    - If the query is not SQL, the system checks if it is a NoSQL query.
+
+        - If it is a NoSQL query, it is executed in MongoDB.
+
+        - If the query is neither SQL nor NoSQL, the system returns an Error.
+
+4. Output:
+
+    - If executed in MySQL, the system produces an SQL output.
+
+    - If executed in MongoDB, the system produces a NoSQL output.
+
+    - In case of an error, an Error message is generated.
+
+5. End: The workflow concludes after delivering the output or error response.
 
 ---
 
 ## Implementation
-<img title="Flow Diagram" src="Flow Diagram.png">
 
 ### 1. Functionalities
 
