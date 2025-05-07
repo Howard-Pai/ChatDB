@@ -144,19 +144,14 @@ The **ChatDB** project leverages a modern stack of technologies and tools to sup
 - **pymongo**: A Python driver for MongoDB used to handle operations and queries in the NoSQL database.
 
 ### 3. Implementation Screenshots
-![[截圖 2025-05-05 下午6.52.03.png]]
 
-![[截圖 2025-05-05 下午6.14.37.png]]
-
-![[截圖 2025-05-05 下午6.13.56.png]]
-
-![[截圖 2025-05-05 下午6.41.21.png]]
-
-![[截圖 2025-05-05 下午6.40.56.png]]
-
-![[截圖 2025-05-05 下午6.15.01.png]]
-
-![[截圖 2025-05-05 下午6.53.58.png]]
+<img title="Demo3" src="demo3.png">
+<img title="Demo4" src="demo4.png">
+<img title="Demo5" src="demo5.png">
+<img title="Demo6" src="demo6.png">
+<img title="Demo7" src="demo7.png">
+<img title="Demo8" src="demo8.png">
+<img title="Demo9" src="demo9.png">
 
 ---
 
@@ -242,18 +237,3 @@ As **ChatDB** evolves and potentially handles more sensitive data, adding **robu
 ### 7. **Integration with External APIs and Data Sources**
 
 In the future, **ChatDB** could be extended to integrate with **external APIs** and **data sources**. This would allow users to query and combine data from different platforms, such as financial services, social media, or IoT devices, creating a more dynamic and interconnected system. For example, users could ask the system to combine sales data from the database with real-time stock prices, enabling more complex and insightful analyses.
-
----
-
-## README.md
-Please attach a detailed `README.md` file that includes:
-1. A step-by-step guide on how to implement your code.
-2. Prerequisites such as installed software, API keys, etc.
-3. Instructions on where to add personal API keys (if applicable).
-
----
-
-## Requirements.txt
-Include a `requirements.txt` file to create a virtual environment with all necessary libraries. Ensure that it contains all dependencies for running the project.
-
----
