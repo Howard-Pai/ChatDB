@@ -50,6 +50,7 @@ Provide a description of the system's architecture. Include how the different co
 ---
 
 ## Implementation
+<img title="Flow Diagram" src="Flow Diagram.png">
 
 ### 1. Functionalities
 
