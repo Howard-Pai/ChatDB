@@ -12,6 +12,7 @@ This project provides a natural language interface to allow users to interact wi
 - For using MySQL or MongoDB, ensure you have these details:
   - MySQL connection information (IP/DNS, password, database name)
   - MongoDB connection information (IP/DNS, database name)
+  - Since the databases are set up on the cloud, please inform the project owner to add authorization for your device.
 
 > Note: Do not hardcode your personal API key into the code. Use environment variables or the `.env` file. Ensure the `.env` file is included in `.gitignore` to avoid exposing sensitive information.
 
